@@ -1,0 +1,5 @@
+requests
+pytest
+pytest-dotenv
+python-dotenv
+faker

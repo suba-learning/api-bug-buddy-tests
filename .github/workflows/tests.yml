@@ -26,14 +26,6 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Check secrets are set
-        run: |
-          echo "BASE_URL is set: ${{ secrets.BASE_URL != '' }}"
-          echo "TEST_USER_EMAIL is set: ${{ secrets.TEST_USER_EMAIL != '' }}"
-          echo "TEST_USER_PASSWORD is set: ${{ secrets.TEST_USER_PASSWORD != '' }}"
-          echo "TEST_FIRST_NAME is set: ${{ secrets.TEST_FIRST_NAME != '' }}"
-          echo "TEST_LAST_NAME is set: ${{ secrets.TEST_LAST_NAME != '' }}"
-
       - name: Install dependencies
         run: pip install -r requirements.txt
 

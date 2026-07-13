@@ -60,14 +60,13 @@ def test_update_me(auth_token):
     assert response.status_code == 200
     assert response.json()["email"] == TEST_USER_EMAIL
 
+
 # def test_logout_me():
 #     login_response = requests.post(f"{BASE_URL}/api/public/users/login", json={
 #         "email": TEST_USER_EMAIL,
 #         "password": TEST_USER_PASSWORD
 #     })
 #     token = login_response.json()["token"]
-
 #     headers = {"Authorization": f"Bearer {token}"}
 #     response = requests.post(f"{BASE_URL}/api/public/users/logout", headers=headers)
-
 #     assert response.status_code == 200

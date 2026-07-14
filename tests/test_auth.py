@@ -1,10 +1,9 @@
 import requests
-from config.config import BASE_URL, TEST_USER_EMAIL, TEST_FIRST_NAME, TEST_USER_PASSWORD
-
+from config.config import config
 
 def test_login_success(registered_user):
     """Valid credentials should return 200 and a JWT token"""
-    url = f"{BASE_URL}/api/public/users/login"
+    url = f"{config.BASE_URL}/api/public/users/login"
     payload = {
         "email": registered_user["email"],
         "password": registered_user["password"]
@@ -27,44 +26,44 @@ def test_login_success(registered_user):
 
 def test_login_wrong_password():
     """Wrong password should return 401 Unauthorized"""
-    url = f"{BASE_URL}/api/public/users/login"
+    url = f"{config.BASE_URL}/api/public/users/login"
     payload = {
-        "email": TEST_USER_EMAIL,
+        "email": config.TEST_USER_EMAIL,
         "password": "WrongPWD"
     }
     response = requests.post(url, json=payload)
     assert response.status_code == 401, f"Expected 401 but got {response.status_code}"
 
 def test_me(auth_token):
-    url = f"{BASE_URL}/api/public/users/me"
+    url = f"{config.BASE_URL}/api/public/users/me"
     headers = {"Authorization": f"Bearer {auth_token}"}
     response = requests.get(url, headers=headers)
     assert response.status_code == 200
-    assert response.json()["email"] == TEST_USER_EMAIL, "Email doesn't match"
-    assert response.json()["firstName"] == TEST_FIRST_NAME, "First name doesn't match"
+    assert response.json()["email"] == config.TEST_USER_EMAIL, "Email doesn't match"
+    assert response.json()["firstName"] == config.TEST_FIRST_NAME, "First name doesn't match"
 
 #Negative test
 def test_me_without_auth():
-    url = f"{BASE_URL}/api/public/users/me"
+    url = f"{config.BASE_URL}/api/public/users/me"
     response = requests.get(url)
     assert response.status_code == 401
 
 def test_update_me(auth_token):
-    url = f"{BASE_URL}/api/public/users/me"
+    url = f"{config.BASE_URL}/api/public/users/me"
     headers = {"Authorization": f"Bearer {auth_token}"}
     payload = {
         "firstName": "Janet",
-        "email": TEST_USER_EMAIL
+        "email": config.TEST_USER_EMAIL
     }
     response = requests.patch(url, json=payload, headers=headers)
     assert response.status_code == 200
-    assert response.json()["email"] == TEST_USER_EMAIL
+    assert response.json()["email"] == config.TEST_USER_EMAIL
 
 
 # def test_logout_me():
-#     login_response = requests.post(f"{BASE_URL}/api/public/users/login", json={
-#         "email": TEST_USER_EMAIL,
-#         "password": TEST_USER_PASSWORD
+#     login_response = requests.post(f"{config.BASE_URL}/api/public/users/login", json={
+#         "email": config.TEST_USER_EMAIL,
+#         "password": config.TEST_USER_PASSWORD
 #     })
 #     token = login_response.json()["token"]
 #     headers = {"Authorization": f"Bearer {token}"}

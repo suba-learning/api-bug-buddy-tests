@@ -2,13 +2,14 @@ from wsgiref import headers
 
 import requests
 from faker import Faker
-from config.config import BASE_URL, TEST_USER_EMAIL
+from config.config import config
+
 
 fake = Faker()
 
 created_contact = {}
 def test_create_contact(auth_token):
-    url = f"{BASE_URL}/api/public/contacts"
+    url = f"{config.BASE_URL}/api/public/contacts"
     payload = {
         "firstName": fake.first_name(),
         "lastName": fake.last_name(),
@@ -28,7 +29,7 @@ def test_create_contact(auth_token):
 
 
 def test_neg_create_contact():
-    url = f"{BASE_URL}/api/public/contacts"
+    url = f"{config.BASE_URL}/api/public/contacts"
     payload = {
         "firstName": fake.first_name(),
         "lastName": fake.last_name(),
@@ -42,21 +43,21 @@ def test_neg_create_contact():
 
 
 def test_list_contacts(auth_token):
-    url = f"{BASE_URL}/api/public/contacts"
+    url = f"{config.BASE_URL}/api/public/contacts"
     headers = {"Authorization": f"Bearer {auth_token}"}
     response = requests.get(url, headers=headers)
     print(response.text)
     assert response.status_code == 200
 
 def test_list_contacts_by_id(auth_token):
-    url = f"{BASE_URL}/api/public/contacts"
+    url = f"{config.BASE_URL}/api/public/contacts"
     headers = {"Authorization": f"Bearer {auth_token}"}
     response = requests.get(url+"/"+created_contact["id"], headers=headers)
     print(response.text)
     assert response.status_code == 200
 
 def test_patch_contact(auth_token):
-    url = f"{BASE_URL}/api/public/contacts"
+    url = f"{config.BASE_URL}/api/public/contacts"
     headers = {"Authorization": f"Bearer {auth_token}"}
     payload = {
          "phone": "555-9999"
@@ -66,7 +67,7 @@ def test_patch_contact(auth_token):
     assert response.status_code == 200
 
 def test_put_contact(auth_token):
-    url = f"{BASE_URL}/api/public/contacts"
+    url = f"{config.BASE_URL}/api/public/contacts"
     headers = {"Authorization": f"Bearer {auth_token}"}
     payload = {
         "firstName": "Replaced",
@@ -89,7 +90,7 @@ def test_put_contact(auth_token):
     assert updated["country"] is None
 
 def test_delete_contact(auth_token):
-    url = f"{BASE_URL}/api/public/contacts"
+    url = f"{config.BASE_URL}/api/public/contacts"
     headers = {"Authorization": f"Bearer {auth_token}"}
     response = requests.delete(url+"/"+created_contact["id"], headers=headers)
     print(response.text)

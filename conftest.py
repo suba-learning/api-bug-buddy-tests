@@ -8,70 +8,48 @@ To exist → we need to CREATE the user first
 """
 import pytest
 import requests
-from config.config import (
-    BASE_URL,
-    TEST_USER_EMAIL,
-    TEST_USER_PASSWORD,
-    TEST_FIRST_NAME,
-    TEST_LAST_NAME
-)
+from config.config import config
 
 
 @pytest.fixture(scope="session")
 def base_url():
-    return BASE_URL
-
-import pytest
-import requests
-from config.config import (
-    BASE_URL,
-    TEST_USER_EMAIL,
-    TEST_USER_PASSWORD,
-    TEST_FIRST_NAME,
-    TEST_LAST_NAME
-)
-
-
-@pytest.fixture(scope="session")
-def base_url():
-    return BASE_URL
-
+    return config.BASE_URL
 
 @pytest.fixture(scope="session")
 def registered_user():
     # ---- SETUP ----
-    url = f"{BASE_URL}/api/public/users"
+    url = f"{config.BASE_URL}/api/public/users"
     payload = {
-        "firstName": TEST_FIRST_NAME,
-        "lastName": TEST_LAST_NAME,
-        "email": TEST_USER_EMAIL,
-        "password": TEST_USER_PASSWORD
+        "firstName": config.TEST_FIRST_NAME,
+        "lastName": config.TEST_LAST_NAME,
+        "email": config.TEST_USER_EMAIL,
+        "password": config.TEST_USER_PASSWORD
     }
     response = requests.post(url, json=payload)
     assert response.status_code == 201, f"User creation failed: {response.text}"
 
     # ---- HAND OVER DATA ----
     yield {
-        "email": TEST_USER_EMAIL,
-        "password": TEST_USER_PASSWORD
+        "email": config.TEST_USER_EMAIL,
+        "password": config.TEST_USER_PASSWORD
     }
 
     # ---- TEARDOWN ----
     # We need a fresh token to delete the account
-    login_url = f"{BASE_URL}/api/public/users/login"
+    login_url = f"{config.BASE_URL}/api/public/users/login"
     login_response = requests.post(login_url, json={
-        "email": TEST_USER_EMAIL,
-        "password": TEST_USER_PASSWORD
+        "email": config.TEST_USER_EMAIL,
+        "password": config.TEST_USER_PASSWORD
     })
     token = login_response.json().get("token")
 
-    delete_url = f"{BASE_URL}/api/public/users/me"
+    delete_url = f"{config.BASE_URL}/api/public/users/me"
     headers = {"Authorization": f"Bearer {token}"}
     requests.delete(delete_url, headers=headers)
 
 @pytest.fixture(scope="session")
 def auth_token(registered_user):
-    url = f"{BASE_URL}/api/public/users/login"
+    url = f"{config.BASE_URL}/api/public/users/login"
     payload = {
         "email": registered_user["email"],
         "password": registered_user["password"]
